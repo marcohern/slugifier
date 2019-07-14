@@ -5,6 +5,6 @@ Route::group([
   'prefix' => 'mh/slug/api',
   'middleware' => ['api']
 ], function () {
-  Route::get ('/', 'SlugifierController@index'  );
+  Route::resource('slugifier','SlugifierController');
   
 });
