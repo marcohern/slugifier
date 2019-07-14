@@ -1,0 +1,26 @@
+{
+    "name": "marcohern/slugifier",
+    "description": "Slugify your life",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Marco Hernandez",
+            "email": "marcohern@gmail.com"
+        }
+    ],
+    "autoload": {
+      "psr-4": {
+        "Tests\\":"tests/",
+        "Marcohern\\Dimages\\": "src/"
+      },
+      "classmap": [
+          "src/"
+      ]
+  },
+  "require": {
+    
+  },
+  "require-dev": {
+      "phpunit/phpunit": "^8"
+  }
+}
