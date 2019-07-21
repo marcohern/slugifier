@@ -10,7 +10,7 @@ use Marcohern\Slugifier\Lib\Slugifier;
 class SlugifierController extends Controller
 {
   protected $slugifier;
-  
+
   public function __construct(Slugifier $slugifier) {
     $this->slugifier = $slugifier;
   }
@@ -29,5 +29,25 @@ class SlugifierController extends Controller
 
   public function store_global(Request $request, string $slug) {
     return $this->slugifier->store($slug, '', $request->format, $request->formatIfZero);
+  }
+
+  public function storex(Request $request, string $entity, string $slug) {
+    return [
+      'slug'=>$slug,
+      'entity'=>$entity,
+      'slugFormats'=>$request->slugFormats,
+      'fields'=>$request->fields,
+      'format'=>$request->format,
+      'formatIfZero'=>$request->formatIfZero
+    ];
+    return $this->slugifier->storeWithContext(
+      $slug, $entity, $request->slugFormats, $request->fields, $request->format, $request->formatIfZero
+    );
+  }
+
+  public function storex_global(Request $request, string $slug) {
+    return $this->slugifier->storeWithContext(
+      $slug, '', $request->slugFormats, $request->fields, $request->format, $request->formatIfZero
+    );
   }
 }

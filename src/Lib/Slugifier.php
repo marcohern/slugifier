@@ -51,6 +51,15 @@ class Slugifier {
     return $result;
   }
 
+  public function slugFormat($slug, $format, &$fields=[]) {
+    $result = $format;
+    foreach ($fields as $name => $value) {
+      $result = str_replace("%$name", $value, $result);
+    }
+    $result = str_replace('%slug', $slug, $result);
+    return $result;
+  }
+
   public function check($slug, $entity='', $format='%slug-%n',$formatIfZero='%slug') {
     $dbslug = Slug::select()->where('entity','=', $entity)->where('slug','=', $slug)->first();
     if (!$dbslug) $sequence = 0;
@@ -81,5 +90,23 @@ class Slugifier {
       'slug' => $rslug,
       'sequence' => $sequence
     ];
+  }
+
+  public function storeWithContext(
+    $slug, $entity='', 
+    $slugFormats=[], $fields=[],
+    $format='%slug-%n',$formatIfZero='%slug') {
+    
+    $rslug = null;
+    $sequence = 0;
+    foreach ($slugFormats as $format) {
+      $gslug = $this->slugFormat($slug, $format, $fields);
+      $dbslug = Slug::select()->where('entity','=', $entity)->where('slug','=', $gslug)->first();
+      if (!$dbslug) {
+        $rslug = $gslug;
+        break;
+      }
+    }
+    return $rslug;
   }
 }
