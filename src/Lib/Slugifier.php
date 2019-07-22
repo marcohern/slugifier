@@ -65,40 +65,36 @@ class Slugifier {
     return str_slug($target,$sep);
   }
 
-  public function check(string $source, string $entity='', string $format='%slug-%n', string $formatIfZero='%slug') {
-    $slug = $this->slugify($source);
-    $entity = $this->slugify($entity);
-    $dbslug = Slug::select()->where('entity','=', $entity)->where('slug','=', $slug)->first();
-    if (!$dbslug) $sequence = 0;
-    else $sequence = $dbslug->sequence;
-    $rslug = $this->format($slug, $sequence, $format, $formatIfZero);
+  public function check(string $slug, string $entity='', string $format='%slug-%n', string $formatIfZero='%slug') {
+    $slugRecord = Slug::select()->where('entity','=', $entity)->where('slug','=', $slug)->first();
+    if (!$slugRecord) $sequence = 0;
+    else $sequence = $slugRecord->sequence;
+    $slugFormatted = $this->format($slug, $sequence, $format, $formatIfZero);
     return [
       'entity' => $entity,
-      'slug' => $rslug,
+      'slug' => $slugFormatted,
       'sequence' => $sequence
     ];
   }
 
   public function store(string $source, string $entity='', string $format='%slug-%n', string $formatIfZero='%slug') {
-    $slug = $this->slugify($source);
-    $entity = $this->slugify($entity);
-    $dbslug = Slug::select()->where('entity','=', $entity)->where('slug','=', $slug)->first();
+    $slugRecord = Slug::select()->where('entity','=', $entity)->where('slug','=', $slug)->first();
     $sequence = 0;
-    if ($dbslug) {
-      $sequence = $dbslug->sequence;
-      $dbslug->sequence++;
+    if ($slugRecord) {
+      $sequence = $slugRecord->sequence;
+      $slugRecord->sequence++;
     } else {
-      $dbslug = new Slug;
-      $dbslug->entity = $entity;
-      $dbslug->slug = $slug;
-      $dbslug->sequence = $sequence+1;
+      $slugRecord = new Slug;
+      $slugRecord->entity = $entity;
+      $slugRecord->slug = $slug;
+      $slugRecord->sequence = $sequence+1;
     }
-    $dbslug->save();
+    $slugRecord->save();
 
-    $rslug = $this->format($slug, $sequence, $format, $formatIfZero);
+    $formattedSlug = $this->format($slug, $sequence, $format, $formatIfZero);
     return [
       'entity' => $entity,
-      'slug' => $rslug,
+      'slug' => $formattedSlug,
       'sequence' => $sequence
     ];
   }
@@ -108,12 +104,12 @@ class Slugifier {
     array $slugFormats=[], array $fields=[],
     string $format='%slug-%n', string $formatIfZero='%slug') {
     
-    $gslug = null;
+    $contextSlug = null;
     foreach ($slugFormats as $slugFormat) {
-      $gslug = $this->slugFormat($slug, $slugFormat, $fields);
-      $dbslug = Slug::select()->where('entity','=', $entity)->where('slug','=', $gslug)->first();
-      if (!$dbslug) break;
+      $contextSlug = $this->slugFormat($slug, $slugFormat, $fields);
+      $slugRecord = Slug::select()->where('entity','=', $entity)->where('slug','=', $contextSlug)->first();
+      if (!$slugRecord) break;
     }
-    return $this->store($gslug, $entity, $format, $formatIfZero);
+    return $this->store($contextSlug, $entity, $format, $formatIfZero);
   }
 }

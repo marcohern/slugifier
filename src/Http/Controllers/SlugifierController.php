@@ -23,7 +23,6 @@ class SlugifierController extends Controller
   }
 
   public function check(UniquefyRequest $request) {
-
     $sep = $request->input('sep','-');
     $source = $this->slugifier->slugify($request->source, $sep);
     $entity = $this->slugifier->slugify($request->input('entity', ''), $sep);
@@ -34,7 +33,6 @@ class SlugifierController extends Controller
   }
 
   public function store(UniquefyRequest $request) {
-
     $sep = $request->input('sep','-');
     $source = $this->slugifier->slugify($request->source, $sep);
     $entity = $this->slugifier->slugify($request->input('entity', ''), $sep);
@@ -45,8 +43,9 @@ class SlugifierController extends Controller
   }
 
   public function storex(Request $request) {
-    $slug = $this->slugifier->slugify($request->source);
-    $entity = $request->input('entity','');
+    $sep = $request->input('sep','-');
+    $slug = $this->slugifier->slugify($request->source, $sep);
+    $entity = $this->slugifier->slugify($request->input('entity', ''), $sep);
     return $this->slugifier->contextualize(
       $slug,
       $entity,
