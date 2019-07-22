@@ -15,6 +15,10 @@ class SlugifierController extends Controller
     $this->slugifier = $slugifier;
   }
 
+  public function slugify(Request $request) {
+    return $this->slugifier->slugify($request->slug, $request->sep);
+  }
+
   public function check(Request $request, string $entity, string $slug) {
     return $this->slugifier->check($slug, $entity, $request->format, $request->formatIfZero);
   }

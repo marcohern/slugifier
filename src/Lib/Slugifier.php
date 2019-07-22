@@ -60,6 +60,10 @@ class Slugifier {
     return $result;
   }
 
+  public function slugify(string $target, string $sep = '-') : string {
+    return str_slug($target,$sep);
+  }
+
   public function check($slug, $entity='', $format='%slug-%n',$formatIfZero='%slug') {
     $dbslug = Slug::select()->where('entity','=', $entity)->where('slug','=', $slug)->first();
     if (!$dbslug) $sequence = 0;

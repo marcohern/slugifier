@@ -5,6 +5,7 @@ Route::group([
   'prefix' => 'slugifier',
   'middleware' => ['api']
 ], function () {
+  Route::post('/slugify'               , 'SlugifierController@slugify');
   Route::get ('/check/{entity}/{slug}' , 'SlugifierController@check');
   Route::get ('/check/{slug}'          , 'SlugifierController@check_global');
   Route::post('/storex/{entity}/{slug}', 'SlugifierController@storex');
