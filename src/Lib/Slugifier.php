@@ -54,7 +54,8 @@ class Slugifier {
   public function slugFormat($slug, $format, &$fields=[]) {
     $result = $format;
     foreach ($fields as $name => $value) {
-      $result = str_replace("%$name", $value, $result);
+      $slugValue = $this->slugify($value);
+      $result = str_replace("%$name", $slugValue, $result);
     }
     $result = str_replace('%slug', $slug, $result);
     return $result;
@@ -64,18 +65,23 @@ class Slugifier {
     return str_slug($target,$sep);
   }
 
-  public function check($slug, $entity='', $format='%slug-%n',$formatIfZero='%slug') {
+  public function check(string $source, string $entity='', string $format='%slug-%n', string $formatIfZero='%slug') {
+    $slug = $this->slugify($source);
+    $entity = $this->slugify($entity);
     $dbslug = Slug::select()->where('entity','=', $entity)->where('slug','=', $slug)->first();
     if (!$dbslug) $sequence = 0;
     else $sequence = $dbslug->sequence;
     $rslug = $this->format($slug, $sequence, $format, $formatIfZero);
     return [
+      'entity' => $entity,
       'slug' => $rslug,
       'sequence' => $sequence
     ];
   }
 
-  public function store($slug, $entity='', $format='%slug-%n',$formatIfZero='%slug') {
+  public function store(string $source, string $entity='', string $format='%slug-%n', string $formatIfZero='%slug') {
+    $slug = $this->slugify($source);
+    $entity = $this->slugify($entity);
     $dbslug = Slug::select()->where('entity','=', $entity)->where('slug','=', $slug)->first();
     $sequence = 0;
     if ($dbslug) {
@@ -85,32 +91,29 @@ class Slugifier {
       $dbslug = new Slug;
       $dbslug->entity = $entity;
       $dbslug->slug = $slug;
-      $dbslug->sequence = $sequence;
+      $dbslug->sequence = $sequence+1;
     }
     $dbslug->save();
 
     $rslug = $this->format($slug, $sequence, $format, $formatIfZero);
     return [
+      'entity' => $entity,
       'slug' => $rslug,
       'sequence' => $sequence
     ];
   }
 
-  public function storeWithContext(
-    $slug, $entity='', 
-    $slugFormats=[], $fields=[],
-    $format='%slug-%n',$formatIfZero='%slug') {
+  public function contextualize(
+    string $slug, string $entity='', 
+    array $slugFormats=[], array $fields=[],
+    string $format='%slug-%n', string $formatIfZero='%slug') {
     
-    $rslug = null;
-    $sequence = 0;
-    foreach ($slugFormats as $format) {
-      $gslug = $this->slugFormat($slug, $format, $fields);
+    $gslug = null;
+    foreach ($slugFormats as $slugFormat) {
+      $gslug = $this->slugFormat($slug, $slugFormat, $fields);
       $dbslug = Slug::select()->where('entity','=', $entity)->where('slug','=', $gslug)->first();
-      if (!$dbslug) {
-        $rslug = $gslug;
-        break;
-      }
+      if (!$dbslug) break;
     }
-    return $rslug;
+    return $this->store($gslug, $entity, $format, $formatIfZero);
   }
 }
