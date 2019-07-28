@@ -77,7 +77,7 @@ class Slugifier {
     ];
   }
 
-  public function store(string $source, string $entity='', string $format='%slug-%n', string $formatIfZero='%slug') {
+  public function store(string $slug, string $entity='', string $format='%slug-%n', string $formatIfZero='%slug') {
     $slugRecord = Slug::select()->where('entity','=', $entity)->where('slug','=', $slug)->first();
     $sequence = 0;
     if ($slugRecord) {
