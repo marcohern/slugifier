@@ -65,12 +65,12 @@ class UniquifierTest extends TestCase
     ];
 
     $slugifier = new Uniquifier;
-    $r1 = (object)$slugifier->contextualizeSlug('bbc', 'bars', $formats, $fields);
-    $r2 = (object)$slugifier->contextualizeSlug('bbc', 'bars', $formats, $fields);
-    $r3 = (object)$slugifier->contextualizeSlug('bbc', 'bars', $formats, $fields);
-    $r4 = (object)$slugifier->contextualizeSlug('bbc', 'bars', $formats, $fields);
-    $r5 = (object)$slugifier->contextualizeSlug('bbc', 'bars', $formats, $fields);
-    $r6 = (object)$slugifier->contextualizeSlug('bbc', 'bars', $formats, $fields);
+    $r1 = (object)$slugifier->contextualizeAndStoreSlug('bbc', 'bars', $formats, $fields);
+    $r2 = (object)$slugifier->contextualizeAndStoreSlug('bbc', 'bars', $formats, $fields);
+    $r3 = (object)$slugifier->contextualizeAndStoreSlug('bbc', 'bars', $formats, $fields);
+    $r4 = (object)$slugifier->contextualizeAndStoreSlug('bbc', 'bars', $formats, $fields);
+    $r5 = (object)$slugifier->contextualizeAndStoreSlug('bbc', 'bars', $formats, $fields);
+    $r6 = (object)$slugifier->contextualizeAndStoreSlug('bbc', 'bars', $formats, $fields);
 
     $this->assertEquals($r1->slug, 'bbc');
     $this->assertEquals($r2->slug, 'bbc-andino');

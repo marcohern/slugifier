@@ -56,11 +56,16 @@ class Uniquifier {
       if (!$slugRecord) break;
     }
     if ($slugRecord) $sequence = $slugRecord->sequence;
-    $formattedSlug = $this->formatter->format($slug, $sequence);
+    $formattedSlug = $this->formatter->format($contextSlug, $sequence);
     return [
       'entity' => $entity,
       'slug' => $formattedSlug,
       'sequence' => $sequence
     ];
+  }
+
+  public function contextualizeAndStoreSlug(string $slug, string $entity='', array $slugFormats=[], array $fields=[]) {
+    $ctx = (object)$this->contextualizeSlug($slug, $entity, $slugFormats, $fields);
+    return $this->storeSlug($ctx->slug, $ctx->entity);
   }
 }
