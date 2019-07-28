@@ -46,19 +46,10 @@ class BaseSlugifier {
     ];
   }
 
-  public function slugFormat($slug, $format, &$fields=[]) {
-    $result = $format;
-    foreach ($fields as $name => $value) {
-      $result = str_replace("%$name", $value, $result);
-    }
-    $result = str_replace('%slug', $slug, $result);
-    return $result;
-  }
-
   public function contextualizeSlug(string $slug, string $entity='', array $slugFormats=[], array $fields=[]) {
     $contextSlug = null;
     foreach ($slugFormats as $slugFormat) {
-      $contextSlug = $this->slugFormat($slug, $slugFormat, $fields);
+      $contextSlug = $this->formatter->slugFormat($slug, $slugFormat, $fields);
       $slugRecord = Slug::select()->where('entity','=', $entity)->where('slug','=', $contextSlug)->first();
       if (!$slugRecord) break;
     }

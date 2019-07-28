@@ -47,7 +47,7 @@ class SlugFormatter {
     return $result;
   }
 
-  public function format(string $slug, string $n) {
+  public function format(string $slug, string $n) : string {
     $result = ($n==0) ? $this->formatIfZero : $this->format;
     $roman = $this->roman($n);
     $letters = $this->letters($n);
@@ -58,4 +58,12 @@ class SlugFormatter {
     return $result;
   }
 
+  public function slugFormat(string $slug, string $format, array &$fields) : string {
+    $result = $format;
+    foreach ($fields as $name => $value) {
+      $result = str_replace("%$name", $value, $result);
+    }
+    $result = str_replace('%slug', $slug, $result);
+    return $result;
+  }
 }
