@@ -27,14 +27,26 @@ class SlugifierController extends Controller
   }
 
   public function check(UniquefyRequest $request) {
+    $this->slugifier->setFormat($request->input('format','%slug-%n'));
+    $this->slugifier->setFormatIfZero($request->input('formatIfZero','%slug'));
     return $this->slugifier->check($request->source, $request->entity);
   }
 
+  public function checkx(UniquefyRequest $request) {
+    $this->slugifier->setFormat($request->input('format','%slug-%n'));
+    $this->slugifier->setFormatIfZero($request->input('formatIfZero','%slug'));
+    return $this->slugifier->checkContext($request->source, $request->entity);
+  }
+
   public function store(UniquefyRequest $request) {
+    $this->slugifier->setFormat($request->input('format','%slug-%n'));
+    $this->slugifier->setFormatIfZero($request->input('formatIfZero','%slug'));
     return $this->slugifier->store($request->source, $request->entity);
   }
 
-  public function storex(Request $request) {
+  public function storex(UniquefyRequest $request) {
+    $this->slugifier->setFormat($request->input('format','%slug-%n'));
+    $this->slugifier->setFormatIfZero($request->input('formatIfZero','%slug'));
     return $this->slugifier->contextualize(
       $request->source, $request->entity,
       $request->slugFormats, $request->fields

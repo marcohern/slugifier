@@ -49,11 +49,18 @@ class Uniquifier {
 
   public function contextualizeSlug(string $slug, string $entity='', array $slugFormats=[], array $fields=[]) {
     $contextSlug = null;
+    $sequence = 0;
     foreach ($slugFormats as $slugFormat) {
       $contextSlug = $this->formatter->slugFormat($slug, $slugFormat, $fields);
       $slugRecord = Slug::select()->where('entity','=', $entity)->where('slug','=', $contextSlug)->first();
       if (!$slugRecord) break;
     }
-    return $this->storeSlug($contextSlug, $entity);
+    if ($slugRecord) $sequence = $slugRecord->sequence;
+    $formattedSlug = $this->formatter->format($slug, $sequence);
+    return [
+      'entity' => $entity,
+      'slug' => $formattedSlug,
+      'sequence' => $sequence
+    ];
   }
 }

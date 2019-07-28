@@ -19,6 +19,9 @@ class Slugifier {
     else $this->uniquifier = $uniquifier;
   }
 
+  public function setFormat(string $format) { $this->formatter->setFormat($format); }
+  public function setFormatIfZero(string $format) { $this->formatter->setFormatIfZero($format); }
+
   public function slugify(string $target, string $sep = '-') : string {
     return str_slug($target,$sep);
   }
@@ -29,14 +32,7 @@ class Slugifier {
     return $this->uniquifier->checkSlug($slug, $entity);
   }
 
-  public function store(string $source, string $entity='') : array {
-    $slug = $this->slugify($source);
-    $entity = $this->slugify($entity);
-    return $this->uniquifier->storeSlug($slug, $entity);
-  }
-
-  public function contextualize(string $source, string $entity='', array $slugFormats=[], array $sourceFields=[]) : array {
-    
+  public function checkContext(string $source, string $entity='') : array {
     $slug = $this->slugify($source);
     $entity = $this->slugify($entity);
     $fields = [];
@@ -44,5 +40,16 @@ class Slugifier {
       $fields[$name] = $this->slugify($value);
     }
     return $this->uniquifier->contextualizeSlug($slug, $entity, $slugFormats, $fields);
+  }
+
+  public function store(string $source, string $entity='') : array {
+    $slug = $this->slugify($source);
+    $entity = $this->slugify($entity);
+    return $this->uniquifier->storeSlug($slug, $entity);
+  }
+
+  public function contextualize(string $source, string $entity='', array $slugFormats=[], array $sourceFields=[]) : array {
+    $ctx = (object)$this->checkContext($slug, $entity, $slugFormats, $fields);
+    return $this->uniquifier->storeSlug($ctx->slug, $entity);
   }
 }

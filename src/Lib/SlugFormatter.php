@@ -12,6 +12,9 @@ class SlugFormatter {
     $this->formatIfZero = $formatIfZero;
   }
 
+  public function setFormat(string $format) { $this->format = $format;}
+  public function setFormatIfZero(string $format) { $this->formatIfZero = $format;}
+
   public function roman(int $integer) : string {
     $result = '';
     $lookup = [
