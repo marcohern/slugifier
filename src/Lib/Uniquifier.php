@@ -5,7 +5,7 @@ namespace Marcohern\Slugifier\Lib;
 use Marcohern\Slugifier\Lib\SlugFormatter;
 use Marcohern\Slugifier\Slug;
 
-class BaseSlugifier {
+class Uniquifier {
 
   protected $formatter;
 

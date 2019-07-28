@@ -6,10 +6,10 @@ use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Marcohern\Slugifier\Lib\SlugFormatter;
-use Marcohern\Slugifier\Lib\BaseSlugifier;
+use Marcohern\Slugifier\Lib\Uniquifier;
 use Marcohern\Slugifier\Slug;
 
-class BaseSlugifierTest extends TestCase
+class UniquifierTest extends TestCase
 {
   use RefreshDatabase;
   
@@ -28,7 +28,7 @@ class BaseSlugifierTest extends TestCase
     $sr->sequence = 12;
     $sr->save();
 
-    $slugifier = new BaseSlugifier;
+    $slugifier = new Uniquifier;
     $result = $slugifier->checkSlug('brad-pitt', 'actors');
     $this->assertEquals($result, ['entity' => 'actors','slug' => 'brad-pitt-12','sequence' => 12]);
   }
@@ -40,7 +40,7 @@ class BaseSlugifierTest extends TestCase
     $sr->sequence = 5;
     $sr->save();
 
-    $slugifier = new BaseSlugifier;
+    $slugifier = new Uniquifier;
     $result = $slugifier->storeSlug('brad-pitt', 'actors');
     $this->assertEquals($result, ['entity' => 'actors','slug' => 'brad-pitt-5','sequence' => 5]);
 
@@ -64,7 +64,7 @@ class BaseSlugifierTest extends TestCase
       '%slug-%prox-%zone-%city',
     ];
 
-    $slugifier = new BaseSlugifier;
+    $slugifier = new Uniquifier;
     $r1 = (object)$slugifier->contextualizeSlug('bbc', 'bars', $formats, $fields);
     $r2 = (object)$slugifier->contextualizeSlug('bbc', 'bars', $formats, $fields);
     $r3 = (object)$slugifier->contextualizeSlug('bbc', 'bars', $formats, $fields);
