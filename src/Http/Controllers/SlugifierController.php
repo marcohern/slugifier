@@ -17,42 +17,27 @@ class SlugifierController extends Controller
     $this->slugifier = $slugifier;
   }
 
+  public function index() {
+    return Slug::all();
+  }
+
   public function slugify(SlugifyRequest $request) {
     $sep = $request->input('sep','-');
     return $this->slugifier->slugify($request->source, $sep);
   }
 
   public function check(UniquefyRequest $request) {
-    $sep = $request->input('sep','-');
-    $source = $this->slugifier->slugify($request->source, $sep);
-    $entity = $this->slugifier->slugify($request->input('entity', ''), $sep);
-    $format = $request->input('format', '%slug-%n');
-    $formatIfZero = $request->input('formatIfZero', '%slug');
-
-    return $this->slugifier->check($source, $entity, $format, $formatIfZero);
+    return $this->slugifier->check($request->source, $request->entity);
   }
 
   public function store(UniquefyRequest $request) {
-    $sep = $request->input('sep','-');
-    $source = $this->slugifier->slugify($request->source, $sep);
-    $entity = $this->slugifier->slugify($request->input('entity', ''), $sep);
-    $format = $request->input('format', '%slug-%n');
-    $formatIfZero = $request->input('formatIfZero', '%slug');
-
-    return $this->slugifier->store($source, $entity, $format, $formatIfZero);
+    return $this->slugifier->store($request->source, $request->entity);
   }
 
   public function storex(Request $request) {
-    $sep = $request->input('sep','-');
-    $slug = $this->slugifier->slugify($request->source, $sep);
-    $entity = $this->slugifier->slugify($request->input('entity', ''), $sep);
     return $this->slugifier->contextualize(
-      $slug,
-      $entity,
-      $request->input('slugFormats',[]),
-      $request->input('fields',[]),
-      $request->input('format', '%slug-%n'),
-      $request->input('formatIfZero', '%slug')
+      $request->source, $request->entity,
+      $request->slugFormats, $request->fields
     );
   }
 }

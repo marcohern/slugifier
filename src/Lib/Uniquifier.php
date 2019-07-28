@@ -9,8 +9,9 @@ class Uniquifier {
 
   protected $formatter;
 
-  public function __construct() {
-    $this->formatter = new SlugFormatter;
+  public function __construct(SlugFormatter $formatter = null) {
+    if (is_null($formatter)) $this->formatter = new SlugFormatter;
+    else $this->formatter = $formatter;
   }
 
   public function checkSlug(string $slug, string $entity='') {
