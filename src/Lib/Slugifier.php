@@ -46,8 +46,12 @@ class Slugifier {
   }
 
   public function contextualize(string $source, string $entity='', array $slugFormats=[], array $sourceFields=[]) : array {
+    $slug = $this->slugify($source);
     $entity = $this->slugify($entity);
-    $ctx = (object)$this->checkContext($source, $entity, $slugFormats, $sourceFields);
-    return $this->uniquifier->storeSlug($ctx->slug, $entity);
+    $fields = [];
+    foreach ($sourceFields as $name => $value) {
+      $fields[$name] = $this->slugify($value);
+    }
+    return $this->uniquifier->contextualizeAndStoreSlug($slug, $entity, $slugFormats, $fields);
   }
 }
