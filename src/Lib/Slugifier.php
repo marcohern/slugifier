@@ -11,12 +11,9 @@ class Slugifier {
   protected $formatter;
   protected $uniquifier;
 
-  public function __construct(SlugFormatter $formatter = null, Uniquifier $uniquifier = null) {
-    if (is_null($this->formatter)) $this->formatter = new SlugFormatter;
-    else $this->formatter = $formatter;
-
-    if (is_null($this->uniquifier)) $this->uniquifier = new Uniquifier($this->formatter);
-    else $this->uniquifier = $uniquifier;
+  public function __construct(SlugFormatter $formatter, Uniquifier $uniquifier) {
+    $this->formatter = $formatter;
+    $this->uniquifier = $uniquifier;
   }
 
   public function setFormat(string $format) { $this->formatter->setFormat($format); }
@@ -32,7 +29,7 @@ class Slugifier {
     return $this->uniquifier->checkSlug($slug, $entity);
   }
 
-  public function checkContext(string $source, string $entity='') : array {
+  public function checkContext(string $source, string $entity='', array $slugFormats=[], array $sourceFields=[]) : array {
     $slug = $this->slugify($source);
     $entity = $this->slugify($entity);
     $fields = [];
@@ -49,7 +46,8 @@ class Slugifier {
   }
 
   public function contextualize(string $source, string $entity='', array $slugFormats=[], array $sourceFields=[]) : array {
-    $ctx = (object)$this->checkContext($slug, $entity, $slugFormats, $fields);
+    $entity = $this->slugify($entity);
+    $ctx = (object)$this->checkContext($source, $entity, $slugFormats, $sourceFields);
     return $this->uniquifier->storeSlug($ctx->slug, $entity);
   }
 }
