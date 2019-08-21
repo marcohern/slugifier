@@ -5,15 +5,31 @@ namespace Marcohern\Slugifier\Lib;
 use Marcohern\Slugifier\Lib\SlugFormatter;
 use Marcohern\Slugifier\Slug;
 
+/**
+ * Makes sure sulgs are unique.
+ */
 class Uniquifier {
 
+  /**
+   * Marcohern\Slugifier\Lib\SlugFormatter
+   */
   protected $formatter;
 
+  /**
+   * Constructor
+   * @param Marcohern\Slugifier\Lib\SlugFormatter Slug formatter
+   */
   public function __construct(SlugFormatter $formatter = null) {
     if (is_null($formatter)) $this->formatter = new SlugFormatter;
     else $this->formatter = $formatter;
   }
 
+  /**
+   * Check if a slug is repeated. Return the current state.
+   * @param string $slug Source slug
+   * @param string $entity Slug entity
+   * @return array slug record
+   */
   public function checkSlug(string $slug, string $entity='') {
     $slugRecord = Slug::select()->where('entity','=', $entity)->where('slug','=', $slug)->first();
     if (!$slugRecord) $sequence = 0;
@@ -26,6 +42,12 @@ class Uniquifier {
     ];
   }
 
+  /**
+   * Return the next state of the slug.
+   * @param string $slug Source slug
+   * @param string $entity Slug entity
+   * @return array slug record
+   */
   public function storeSlug(string $slug, string $entity='') {
     $slugRecord = Slug::select()->where('entity','=', $entity)->where('slug','=', $slug)->first();
     $sequence = 0;
@@ -46,7 +68,7 @@ class Uniquifier {
       'sequence' => $sequence
     ];
   }
-
+  
   public function contextualizeSlug(string $slug, string $entity='', array $slugFormats=[], array $fields=[]) {
     $contextSlug = null;
     $sequence = 0;

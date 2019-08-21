@@ -6,6 +6,9 @@ use Marcohern\Slugifier\Slug;
 use Marcohern\Slugifier\Lib\SlugFormatter;
 use Marcohern\Slugifier\Lib\Uniquifier;
 
+/**
+ * 
+ */
 class Slugifier {
 
   protected $formatter;
