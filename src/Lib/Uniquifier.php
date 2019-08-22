@@ -69,6 +69,14 @@ class Uniquifier {
     ];
   }
   
+  /**
+   * Generate a unique slug using context.
+   * @param string $slug Slug source
+   * @param string $entity Slug entity
+   * @param array $slugFormats list of formats in order
+   * @param array $fields names and values that will me matched with the formats.
+   * @return array unique slug record
+   */
   public function contextualizeSlug(string $slug, string $entity='', array $slugFormats=[], array $fields=[]) {
     $contextSlug = null;
     $sequence = 0;
@@ -86,6 +94,14 @@ class Uniquifier {
     ];
   }
 
+  /**
+   * Generate and store a unique slug using context.
+   * @param string $slug Source Slug
+   * @param string $entity Slug entity
+   * @param array $slugFormats list of formats in order
+   * @param array $fields names and values that will me matched with the formats.
+   * @return array unique slug record
+   */
   public function contextualizeAndStoreSlug(string $slug, string $entity='', array $slugFormats=[], array $fields=[]) {
     $ctx = (object)$this->contextualizeSlug($slug, $entity, $slugFormats, $fields);
     return $this->storeSlug($ctx->slug, $ctx->entity);
