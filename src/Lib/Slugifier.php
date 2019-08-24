@@ -96,6 +96,10 @@ class Slugifier {
     return $this->uniquifier->storeSlug($slug, $entity);
   }
 
+  public function storeSlug(string $source, string $entity='') : string {
+    return $this->store($source, $entity)['slug'];
+  }
+
   /**
    * Generates a contextualized slub based on the current state of the slug.
    * Then Update the slug record.
