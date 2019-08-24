@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 
 class SlugifierServiceProvider extends ServiceProvider {
   public function boot() {
-    $this->loadRoutesFrom(__DIR__.'/../routes/api.php');
+    //$this->loadRoutesFrom(__DIR__.'/../routes/api.php');
   }
   
   public function register() {
