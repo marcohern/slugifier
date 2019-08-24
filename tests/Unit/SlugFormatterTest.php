@@ -37,6 +37,11 @@ class SlugFormatterTest extends TestCase
     $this->assertSame("ab", $formatter->letters(28));
 
     $this->assertSame("bxv", $formatter->letters(1998));
+    $this->assertSame("bxw", $formatter->letters(1999));
+    $this->assertSame("bxx", $formatter->letters(2000));
+    $this->assertSame("bxy", $formatter->letters(2001));
+    $this->assertSame("byz", $formatter->letters(2002));
+    $this->assertSame("bya", $formatter->letters(2003));
   }
 
   public function test_format() {
